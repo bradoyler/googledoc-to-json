@@ -31,7 +31,7 @@ $ googledoc-to-json <doc-id> -c config.json -o output.json
 3. In the right sidebar click `Credentials`
 4. Then click `Create credentials`, select `oAuth client ID`, select `Web application`
 6. Name your Web Application
-7. Enter `https://developers.google.com/oauthplayground/` as an authorized redirect URLs
+7. Enter `https://developers.google.com/oauthplayground` as an authorized redirect URLs
 8. Have your `Client ID` and `Client secret` ready
 9. Go to [https://developers.google.com/oauthplayground/](https://developers.google.com/oauthplayground/)
 10. Under `Step 1` authorize all `Dirve API v3`

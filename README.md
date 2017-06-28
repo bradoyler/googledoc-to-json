@@ -9,22 +9,39 @@ Node.js library to read a Google Drive Doc and convert to JSON (via ArchieML)
 npm install googledoc-to-json --save
 ```
 
-## Example
+## Examples
 
-see 'test' folder
-
- or run:
- ```
- $ npm test
- ```
-
-## CLI
+### CLI
 ```
 $ npm install -g googledoc-to-json
 $ googledoc-to-json <doc-id> -c config.json -o output.json
 ```
 
-### Getting credentials
+### API
+```javascript
+const config = {
+  "google": {
+    "client_id":"--client_id (required)--",
+    "client_secret":"--client_secret (required)--",
+    "oAuthTokens":{"refresh_token":"--refresh token (optional)--"},
+    "redirect_urls":["http://localhost:3000"]
+  }
+};
+
+const GoogleDocToJSON = require('googledoc-to-json');
+const gDocToJSON = new GoogleDocToJSON(myConfig);
+
+const options = {
+    fileId: '1gTERIVPV_0yoMXc6mlBtBpNvaoH5pIU2IC-75V_Qcas',
+    oAuthTokens: config.oAuthTokens
+};
+
+gDocToJSON.getArchieML(options, function (err, aml) {
+    console.log('## ArchieML output', err, aml);
+});
+```
+
+## Getting credentials
 
 1. Got to https://console.developers.google.com
 2. Create an account

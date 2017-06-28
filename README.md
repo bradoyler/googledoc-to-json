@@ -19,17 +19,9 @@ $ googledoc-to-json <doc-id> -c config.json -o output.json
 
 ### API
 ```javascript
-const config = {
-  "google": {
-    "client_id":"--client_id (required)--",
-    "client_secret":"--client_secret (required)--",
-    "oAuthTokens":{"refresh_token":"--refresh token (optional)--"},
-    "redirect_urls":["http://localhost:3000"]
-  }
-};
-
 const GoogleDocToJSON = require('googledoc-to-json');
-const gDocToJSON = new GoogleDocToJSON(myConfig);
+const config = require('./config.json'); // see 'Getting Credentials' below
+const gDocToJSON = new GoogleDocToJSON(config);
 
 const options = {
     fileId: '1gTERIVPV_0yoMXc6mlBtBpNvaoH5pIU2IC-75V_Qcas',

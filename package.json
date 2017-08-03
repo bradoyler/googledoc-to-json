@@ -1,6 +1,6 @@
 {
   "name": "googledoc-to-json",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Read a Google Drive Doc and convert to JSON via ArchieML",
   "main": "index.js",
   "scripts": {

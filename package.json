@@ -17,11 +17,11 @@
     "json"
   ],
   "dependencies": {
-    "googleapis": "2.1.7",
-    "htmlparser2": "3.9.0",
-    "html-entities": "1.2.0",
+    "archieml": "0.3.1",
     "commander": "2.9.0",
-    "archieml": "0.3.1"
+    "googleapis": "^20.1.0",
+    "html-entities": "1.2.0",
+    "htmlparser2": "3.9.0"
   },
   "bugs": {
     "url": "https://github.com/bradoyler/googledoc-to-json/issues"

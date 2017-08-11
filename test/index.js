@@ -1,12 +1,10 @@
-var myConfig = require('../config.json').google;
-var GoogleDocToJSON = require('./../index');
-var gDocToJSON = new GoogleDocToJSON(myConfig);
+const myConfig = require('../config.json').google
+const GoogleDocToJSON = require('./../index')
+const gDocToJSON = new GoogleDocToJSON(myConfig)
 
-var options = {
-    fileId: '1gTERIVPV_0yoMXc6mlBtBpNvaoH5pIU2IC-75V_Qcas',
-    oAuthTokens: myConfig.oAuthTokens
-};
+const fileId = '1gTERIVPV_0yoMXc6mlBtBpNvaoH5pIU2IC-75V_Qcas'
+const { oAuthTokens } = myConfig
 
-gDocToJSON.getArchieML(options, function (err, aml) {
-    console.log('## AML', err, aml);
-});
+gDocToJSON.getArchieML({ fileId, oAuthTokens }, function (err, aml) {
+  console.log('## AML', err, aml)
+})

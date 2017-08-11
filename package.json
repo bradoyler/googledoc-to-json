@@ -31,5 +31,8 @@
   },
   "homepage": "https://github.com/bradoyler/googledoc-to-json",
   "author": "Brad Oyler <bradoyler@gmail.com> (github.com/bradoyler)",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "10.0.3"
+  }
 }

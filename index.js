@@ -68,12 +68,15 @@ gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens }, callback) 
         li: function (tag) {
           return '* ' + tagHandlers._base(tag) + '\n'
         }
-      };
+      }
 
-      ['ul', 'ol'].forEach(function (tag) {
+      const listTags = ['ul', 'ol']
+      listTags.forEach((tag) => {
         tagHandlers[tag] = tagHandlers.span
-      });
-      ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function (tag) {
+      })
+
+      const hTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+      hTags.forEach((tag) => {
         tagHandlers[tag] = tagHandlers.p
       })
 
@@ -85,7 +88,7 @@ gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens }, callback) 
       parsedText = entities.decode(parsedText)
 
       // Remove smart quotes from inside tags
-      parsedText = parsedText.replace(/<[^<>]*>/g, function (match) {
+      parsedText = parsedText.replace(/<[^<>]*>/g, (match) => {
         return match.replace(/”|“/g, '"').replace(/‘|’/g, "'")
       })
 

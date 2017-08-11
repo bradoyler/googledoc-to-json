@@ -15,23 +15,19 @@ function gDocToJSON ({ redirect_urls: redirects, client_id: id, client_secret: s
   this.gDrive = google.drive({ version: 'v3', auth: this.oauth2Client })
 }
 
-gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens }, callback) {
+gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens, mimeType = 'text/html' }, callback) {
   this.oauth2Client.setCredentials(oAuthTokens)
-
-  this.gDrive.files.export({
-    fileId,
-    mimeType: 'text/html'
-  }, function (err, docHtml) {
+  this.gDrive.files.export({ fileId, mimeType }, (err, docHtml) => {
     if (err) {
       return callback(err)
     }
 
-    const handler = new htmlparser.DomHandler(function (error, dom) {
+    const handler = new htmlparser.DomHandler((error, dom) => {
       if (error) {
         console.error('(DomHandler)', error)
       }
       const tagHandlers = {
-        _base: function (tag) {
+        _base: (tag) => {
           let str = ''
           tag.children.forEach(function (child) {
             const transform = tagHandlers[child.name || child.type]
@@ -41,16 +37,16 @@ gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens }, callback) 
           })
           return str
         },
-        text: function (textTag) {
+        text: (textTag) => {
           return textTag.data
         },
-        span: function (spanTag) {
+        span: (spanTag) => {
           return tagHandlers._base(spanTag)
         },
-        p: function (pTag) {
+        p: (pTag) => {
           return tagHandlers._base(pTag) + '\n'
         },
-        a: function (aTag) {
+        a: (aTag) => {
           let { href } = aTag.attribs
           if (href === undefined) return ''
           // extract real URLs from Google's tracking
@@ -65,7 +61,7 @@ gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens }, callback) 
           str += '</a>'
           return str
         },
-        li: function (tag) {
+        li: (tag) => {
           return '* ' + tagHandlers._base(tag) + '\n'
         }
       }
@@ -81,19 +77,19 @@ gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens }, callback) 
       })
 
       const body = dom[0].children[1]
-      let parsedText = tagHandlers._base(body)
+      const parsedText = tagHandlers._base(body)
 
       // Convert html entities into the characters as they exist in the google doc
       const entities = new AllHtmlEntities()
-      parsedText = entities.decode(parsedText)
+      const decodedText = entities.decode(parsedText)
 
       // Remove smart quotes from inside tags
-      parsedText = parsedText.replace(/<[^<>]*>/g, (match) => {
+      const cleanText = decodedText.replace(/<[^<>]*>/g, (match) => {
         return match.replace(/”|“/g, '"').replace(/‘|’/g, "'")
       })
 
-      const parsed = archieml.load(parsedText)
-      callback(null, parsed)
+      const aml = archieml.load(cleanText)
+      callback(null, aml)
     })
 
     const parser = new htmlparser.Parser(handler)
@@ -104,9 +100,7 @@ gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens }, callback) 
 
 gDocToJSON.prototype.getFileInfo = function getFileInfo ({ oAuthTokens, fileId }, callback) {
   this.oauth2Client.setCredentials(oAuthTokens)
-  this.gDrive.files.get({ fileId }, function (err, doc) {
-    callback(err, doc)
-  })
+  this.gDrive.files.get({ fileId }, (err, doc) => callback(err, doc))
 }
 
 module.exports = gDocToJSON

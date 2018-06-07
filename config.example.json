@@ -1,8 +1,0 @@
-{
-  "google": {
-    "client_id":"--client_id (required)--",
-    "client_secret":"--client_secret (required)--",
-    "oAuthTokens":{"refresh_token":"--refresh token (optional)--"},
-    "redirect_urls":["http://localhost:3000"]
-  }
-}

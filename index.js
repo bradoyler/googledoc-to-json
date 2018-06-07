@@ -2,25 +2,26 @@ const archieml = require('archieml')
 const htmlparser = require('htmlparser2')
 const { AllHtmlEntities } = require('html-entities')
 const url = require('url')
-const google = require('googleapis')
+const { google } = require('googleapis')
 
-function gDocToJSON ({ redirect_urls: redirects, client_id: id, client_secret: secret }) {
+function gDocToJSON ({ redirect_uris: redirects, client_id: id, client_secret: secret }) {
   if (!id || !secret) {
     throw new Error('Missing client_id or client_secret')
   }
 
-  const { OAuth2 } = google.auth
   const redirectUrls = (redirects && redirects[0]) ? redirects[0] : ['']
-  this.oauth2Client = new OAuth2(id, secret, redirectUrls)
-  this.gDrive = google.drive({ version: 'v3', auth: this.oauth2Client })
+  this.oAuth2Client = new google.auth.OAuth2(id, secret, redirectUrls)
+  this.gDrive = google.drive({ version: 'v3', auth: this.oAuth2Client })
 }
 
 gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens, mimeType = 'text/html' }, callback) {
-  this.oauth2Client.setCredentials(oAuthTokens)
-  this.gDrive.files.export({ fileId, mimeType }, (err, docHtml) => {
+  this.oAuth2Client.setCredentials(oAuthTokens)
+  this.gDrive.files.export({ fileId, mimeType }, (err, response) => {
     if (err) {
       return callback(err)
     }
+
+    const docHtml = response.data
 
     const handler = new htmlparser.DomHandler((error, dom) => {
       if (error) {
@@ -99,7 +100,7 @@ gDocToJSON.prototype.getArchieML = function ({ fileId, oAuthTokens, mimeType = '
 }
 
 gDocToJSON.prototype.getFileInfo = function getFileInfo ({ oAuthTokens, fileId }, callback) {
-  this.oauth2Client.setCredentials(oAuthTokens)
+  this.oAuth2Client.setCredentials(oAuthTokens)
   this.gDrive.files.get({ fileId }, (err, doc) => callback(err, doc))
 }
 
